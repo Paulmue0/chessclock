@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mButtonStartPausePlayer1;
     private Button mButtonStartPausePlayer2;
     private Button mButtonReset;
+    private Button mButtonPlayPause;
 
     private CountDownTimer mCountDownTimer;
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonStartPausePlayer1 = findViewById(R.id.startstop_player1);
         mButtonStartPausePlayer2 = findViewById(R.id.startstop_player2);
         mButtonReset = findViewById(R.id.reset);
+        mButtonPlayPause = findViewById(R.id.playPause);
 
         mButtonStartPausePlayer1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     pauseTimer();
                     player = false;
                     startTimer();
-                } else if(player) {
+                } else if (player) {
                     startTimer();
                     player = false;
                 }
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     pauseTimer();
                     player = true;
                     startTimer();
-                } else if(!player) {
+                } else if (!player) {
                     startTimer();
                     player = true;
                 }
@@ -77,8 +79,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mButtonPlayPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { playOrPauseGame(); }
+        });
+
         updateCountDownText();
     }
+
 
     private void startTimer() {
         mCountDownTimer = new CountDownTimer(getCurrentTimeLeft(), 1000) {
@@ -103,10 +111,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setCurrentTimeLeft(long millisUntilFinished) {
-        if (player){
+        if (player) {
             mTimeLeftInMillis_Player1 = millisUntilFinished;
-        }
-        else {
+        } else {
             mTimeLeftInMillis_Player2 = millisUntilFinished;
         }
     }
@@ -124,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetTimer() {
-        mTimeLeftInMillis_Player1  = START_TIME_IN_MILLIS;
-        mTimeLeftInMillis_Player2  = START_TIME_IN_MILLIS;
+        mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
+        mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
         mCountDownTimer.cancel();
         player = false;
         updateCountDownText();
@@ -138,22 +145,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateCountDownText() {
-        if(player){
+        if (player) {
             int minutes = (int) (mTimeLeftInMillis_Player1 / 1000) / 60;
             int seconds = (int) (mTimeLeftInMillis_Player1 / 1000) % 60;
             String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
             mTextViewCountDownPlayer1.setText(timeLeftFormatted);
-        }
-        else {
+        } else {
             int minutes = (int) (mTimeLeftInMillis_Player2 / 1000) / 60;
             int seconds = (int) (mTimeLeftInMillis_Player2 / 1000) % 60;
             String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
             mTextViewCountDownPlayer2.setText(timeLeftFormatted);
         }
+    }
 
-
+    private void playOrPauseGame() {
+        if (mTimerRunning) {
+            pauseTimer();
+        } else {
+            startTimer();
+        }
 
     }
 }
