@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="startTimer"
     tools:context=".MainActivity">
 
     <TextView
@@ -44,12 +43,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <pl.droidsonroids.gif.GifImageButton
         android:id="@+id/startstop_player1"
         android:layout_width="411dp"
         android:layout_height="261dp"
-        android:onClick="startTimer"
+        android:background="#fff"
+        android:src="@drawable/pelikan_wasser"
         android:text="countdown"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -57,11 +58,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <Button
+    <pl.droidsonroids.gif.GifImageButton
         android:id="@+id/startstop_player2"
+        android:rotation="180"
         android:layout_width="410dp"
         android:layout_height="238dp"
-        android:onClick="startTimer"
+        android:background="#fff"
+        android:src="@drawable/pelikan_wasser"
+        android:scaleType="centerCrop"
         android:text="countdown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

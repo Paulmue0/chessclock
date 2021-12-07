@@ -1,22 +1,26 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Locale;
+
+import pl.droidsonroids.gif.GifImageButton;
 
 public class MainActivity extends AppCompatActivity {
     private static final long START_TIME_IN_MILLIS = 600000;
 
     private TextView mTextViewCountDownPlayer1;
     private TextView mTextViewCountDownPlayer2;
-    private Button mButtonStartPausePlayer1;
-    private Button mButtonStartPausePlayer2;
+    private GifImageButton mButtonStartPausePlayer1;
+    private GifImageButton mButtonStartPausePlayer2;
     private Button mButtonReset;
     private Button mButtonPlayPause;
 
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private long mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
     private long mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
+    private long mEndTimePlayer1;
+    private long mEndTimePlayer2;
 
     //if True == Player 1
     //If False == Player 2
@@ -52,9 +58,17 @@ public class MainActivity extends AppCompatActivity {
                     pauseTimer();
                     player = false;
                     startTimer();
+                    //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_wasser);
+                    //mButtonStartPausePlayer2.setScaleType(null);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_raw);
                 } else if (player) {
                     startTimer();
                     player = false;
+                    //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_wasser);
+                    //mButtonStartPausePlayer2.setScaleType(null);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_raw);
                 }
             }
         });
@@ -65,9 +79,17 @@ public class MainActivity extends AppCompatActivity {
                     pauseTimer();
                     player = true;
                     startTimer();
+                    //mButtonStartPausePlayer1.setScaleType(null);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_raw);
+                    //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_wasser);
                 } else if (!player) {
                     startTimer();
-                    player = true;
+                    player = false;
+                    //mButtonStartPausePlayer1.setScaleType(null);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_raw);
+                    //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_wasser);
                 }
             }
         });
@@ -89,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void startTimer() {
+        if (player)
+            mEndTimePlayer1 = System.currentTimeMillis() + mTimeLeftInMillis_Player1;
+        else mEndTimePlayer2 = System.currentTimeMillis() + mTimeLeftInMillis_Player2;
+
         mCountDownTimer = new CountDownTimer(getCurrentTimeLeft(), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -99,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 mTimerRunning = false;
-                mButtonStartPausePlayer1.setText("Zeit abgelaufen");
-                mButtonStartPausePlayer2.setText("Zeit abgelaufen");
                 mButtonStartPausePlayer1.setVisibility(View.INVISIBLE);
                 mButtonStartPausePlayer2.setVisibility(View.INVISIBLE);
                 mButtonReset.setVisibility(View.VISIBLE);
@@ -160,6 +184,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void updateButtons() {
+        if (mTimerRunning) {
+            mButtonPlayPause.setText("Pause");
+        } else {
+            mButtonPlayPause.setText("Start");
+        }
+    }
+
     private void playOrPauseGame() {
         if (mTimerRunning) {
             pauseTimer();
@@ -167,5 +199,32 @@ public class MainActivity extends AppCompatActivity {
             startTimer();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("millisLeftPlayer1", mTimeLeftInMillis_Player1);
+        outState.putLong("millisLeftPlayer2", mTimeLeftInMillis_Player2);
+        outState.putBoolean("timerRunning", mTimerRunning);
+        outState.putBoolean("player", player);
+        outState.putLong("endTimePlayer1", mEndTimePlayer1);
+        outState.putLong("endTimePlayer2", mEndTimePlayer2);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        updateCountDownText();
+        updateButtons();
+
+        if (mTimerRunning) {
+            mEndTimePlayer1 = savedInstanceState.getLong("endTimePlayer1");
+            mEndTimePlayer2 = savedInstanceState.getLong("endTimePlayer2");
+            player = savedInstanceState.getBoolean("player");
+            mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
+            mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
+            startTimer();
+        }
     }
 }
