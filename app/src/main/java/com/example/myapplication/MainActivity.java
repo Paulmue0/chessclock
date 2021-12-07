@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private GifImageButton mButtonStartPausePlayer2;
     private Button mButtonReset;
     private Button mButtonPlayPause;
+    private NumberPicker mNumberPicker;
 
     private CountDownTimer mCountDownTimer;
 
@@ -104,6 +106,19 @@ public class MainActivity extends AppCompatActivity {
         mButtonPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { playOrPauseGame(); }
+        });
+
+        mNumberPicker = findViewById(R.id.picker);
+        String[] arrayString= new String[]{"1 + 0","3 | 2","5 | 3","10 | 5","15 | 10"};
+        mNumberPicker.setMinValue(0);
+        mNumberPicker.setMaxValue(arrayString.length-1);
+
+        mNumberPicker.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                // TODO Auto-generated method stub
+                return arrayString[value];
+            }
         });
 
         updateCountDownText();

@@ -40,6 +40,7 @@
         android:text="reset"
         app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,7 +79,6 @@
         android:id="@+id/playPause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="playOrPauseGame"
         android:text="play/pause"
         app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,15 +86,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/startstop_player2" />
 
-    <Button
-        android:id="@+id/settingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="settings"
+    <NumberPicker
+        android:id="@+id/picker"
+        android:layout_width="153dp"
+        android:layout_height="46dp"
         app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.892"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/startstop_player2" />
+        app:layout_constraintHorizontal_bias="0.554"
+        app:layout_constraintStart_toStartOf="@+id/playPause"
+        app:layout_constraintTop_toTopOf="@+id/startstop_player2"
+        app:layout_constraintVertical_bias="0.502" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
