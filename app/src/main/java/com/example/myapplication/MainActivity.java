@@ -7,24 +7,28 @@ import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.Locale;
 
+import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageButton;
 
 public class MainActivity extends AppCompatActivity {
-    private static final long START_TIME_IN_MILLIS = 600000;
+    private long START_TIME_IN_MILLIS = 600000;
+    private short INCREMENT_TIME_IN_MILLIS = 0;
 
     private TextView mTextViewCountDownPlayer1;
     private TextView mTextViewCountDownPlayer2;
     private GifImageButton mButtonStartPausePlayer1;
     private GifImageButton mButtonStartPausePlayer2;
-    private Button mButtonReset;
-    private Button mButtonPlayPause;
+    private ImageButton mButtonReset;
+    private ImageButton mButtonPlayPause;
     private NumberPicker mNumberPicker;
+
 
     private CountDownTimer mCountDownTimer;
 
@@ -42,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        try
+        {
+            this.getSupportActionBar().hide();
+        }
+        catch (NullPointerException e){}
+
         setContentView(R.layout.activity_main);
         // Set Starting Player
         player = true;
@@ -112,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         String[] arrayString= new String[]{"1 + 0","3 | 2","5 | 3","10 | 5","15 | 10"};
         mNumberPicker.setMinValue(0);
         mNumberPicker.setMaxValue(arrayString.length-1);
+       // mNumberPicker.setValue(3);
 
         mNumberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
@@ -120,6 +132,33 @@ public class MainActivity extends AppCompatActivity {
                 return arrayString[value];
             }
         });
+        mNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
+                if (newValue == 0){
+                    START_TIME_IN_MILLIS = 60000;
+                    INCREMENT_TIME_IN_MILLIS = 0;
+                }
+                else if(newValue == 1){
+                    START_TIME_IN_MILLIS = 180000;
+                    INCREMENT_TIME_IN_MILLIS = 3000;
+                }
+                else if(newValue == 2){
+                    START_TIME_IN_MILLIS = 300000;
+                    INCREMENT_TIME_IN_MILLIS = 5000;
+                }
+                else if(newValue == 3){
+                    START_TIME_IN_MILLIS = 600000;
+                    INCREMENT_TIME_IN_MILLIS = 5000;
+                }
+                else if(newValue == 4){
+                    START_TIME_IN_MILLIS = 900000;
+                    INCREMENT_TIME_IN_MILLIS = 15000;
+                }
+                resetTimer();
+            }
+        });
+        mNumberPicker.setValue(3);
 
         updateCountDownText();
     }
@@ -167,12 +206,21 @@ public class MainActivity extends AppCompatActivity {
         mCountDownTimer.cancel();
         mTimerRunning = false;
         mButtonReset.setVisibility(View.VISIBLE);
+
+
+
+
     }
 
     private void resetTimer() {
         mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
         mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
-        mCountDownTimer.cancel();
+        try {
+            mCountDownTimer.cancel();
+        } catch (Exception e) {
+
+        }
+
         player = false;
         updateCountDownText();
         player = true;
@@ -181,6 +229,9 @@ public class MainActivity extends AppCompatActivity {
         //mButtonReset.setVisibility(View.INVISIBLE);
         mButtonStartPausePlayer1.setVisibility(View.VISIBLE);
         mButtonStartPausePlayer2.setVisibility(View.VISIBLE);
+
+        mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_wasser);
+        mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_wasser);
     }
 
     private void updateCountDownText() {
@@ -200,19 +251,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateButtons() {
-        if (mTimerRunning) {
-            mButtonPlayPause.setText("Pause");
-        } else {
-            mButtonPlayPause.setText("Start");
-        }
+       //TODO: Add visibility of buttons
     }
 
     private void playOrPauseGame() {
         if (mTimerRunning) {
             pauseTimer();
+            if(player){
+                try {
+                    ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+
+                }catch (Exception e) {
+                    System.out.println("Fehler beim stoppen des Gifs");
+                    System.out.println(e);
+                }
+            }
+            else{
+                try {
+                    ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
+
+                }catch (Exception e) {
+                    System.out.println("Fehler beim starten des Gifs");
+                    System.out.println(e);
+                }
+            }
+
         } else {
             startTimer();
+            if(player){
+                try {
+                    ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).start();
+
+                }catch (Exception e) {
+                    System.out.println("Fehler beim starten des Gifs");
+                    System.out.println(e);
+                }
+            }
+            else{
+                try {
+                    ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).start();
+
+                }catch (Exception e) {
+                    System.out.println("Fehler beim starten des Gifs");
+                    System.out.println(e);
+                }
+            }
+
         }
+
 
     }
 

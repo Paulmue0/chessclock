@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -33,11 +34,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.239" />
 
-    <Button
+    <ImageButton
         android:id="@+id/reset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="reset"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/reset_button"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
@@ -46,12 +49,12 @@
 
     <pl.droidsonroids.gif.GifImageButton
         android:id="@+id/startstop_player1"
-        android:layout_width="411dp"
-        android:layout_height="261dp"
+        android:layout_width="wrap_content"
+        android:layout_height="242dp"
         android:background="#fff"
+        android:scaleType="centerCrop"
         android:src="@drawable/pelikan_wasser"
         android:text="countdown"
-        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -61,13 +64,12 @@
 
     <pl.droidsonroids.gif.GifImageButton
         android:id="@+id/startstop_player2"
-        android:rotation="180"
-        android:layout_width="410dp"
-        android:layout_height="238dp"
+        android:layout_width="wrap_content"
+        android:layout_height="242dp"
         android:background="#fff"
-        android:src="@drawable/pelikan_wasser"
+        android:rotation="180"
         android:scaleType="centerCrop"
-        android:text="countdown"
+        android:src="@drawable/pelikan_wasser"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -75,11 +77,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
+    <ImageButton
         android:id="@+id/playPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="play/pause"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pause_button"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.097"
@@ -88,14 +92,27 @@
 
     <NumberPicker
         android:id="@+id/picker"
-        android:layout_width="153dp"
-        android:layout_height="46dp"
-        app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
+        android:layout_width="133dp"
+        android:layout_height="98dp"
+        android:scaleX="1"
+        android:scaleY="1"
+        android:theme="@style/DefaultNumberPickerTheme"
+        android:descendantFocusability="blocksDescendants"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.554"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/startstop_player2" />
+
+    app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toStartOf="@+id/playPause"
         app:layout_constraintTop_toTopOf="@+id/startstop_player2"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintVertical_bias="0.483" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
