@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mTextViewCountDownPlayer1;
     private TextView mTextViewCountDownPlayer2;
+    private TextView mTurnCounter1;
+    private TextView mTurnCounter2;
     private GifImageButton mButtonStartPausePlayer1;
     private GifImageButton mButtonStartPausePlayer2;
     private ImageButton mButtonReset;
@@ -38,11 +40,11 @@ public class MainActivity extends AppCompatActivity {
     private long mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
     private long mEndTimePlayer1;
     private long mEndTimePlayer2;
+    private short turnCnt;
 
     //if True == Player 1
     //If False == Player 2
     private boolean player;
-    private boolean firstmove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +59,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Set Starting Player
         player = false;
-        firstmove = true;
+        turnCnt = 0;
+
         mTextViewCountDownPlayer1 = findViewById(R.id.counttime_player1);
         mTextViewCountDownPlayer2 = findViewById(R.id.counttime_player2);
+
+
+        mTurnCounter1 = findViewById(R.id.turnCounter);
+        mTurnCounter1.setVisibility(View.INVISIBLE);
+
+        mTurnCounter2 = findViewById(R.id.turnCounter2);
+        mTurnCounter2.setVisibility(View.INVISIBLE);
 
         mButtonReset = findViewById(R.id.reset);
         mButtonReset.setVisibility(View.INVISIBLE);
@@ -80,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
                     //mButtonStartPausePlayer2.setScaleType(null);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
+                    turnCnt++;
+                    updateCounter();
                 } else if (player) {
                     startTimer();
                     player = false;
@@ -116,9 +128,12 @@ public class MainActivity extends AppCompatActivity {
                     //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
 
+                    mTurnCounter1.setVisibility(View.VISIBLE);
+                    mTurnCounter2.setVisibility(View.VISIBLE);
                     mButtonReset.setVisibility(View.VISIBLE);
                     mButtonPlayPause.setVisibility(View.VISIBLE);
                     mNumberPicker.setVisibility(View.INVISIBLE);
+                    updateCounter();
                 }
             }
         });
@@ -126,10 +141,14 @@ public class MainActivity extends AppCompatActivity {
         mButtonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mTurnCounter1.setVisibility(View.INVISIBLE);
+                mTurnCounter2.setVisibility(View.INVISIBLE);
                 mButtonReset.setVisibility(View.INVISIBLE);
                 mButtonPlayPause.setVisibility(View.INVISIBLE);
                 mButtonPlayPause.setImageResource(R.drawable.pause_button);
                 mNumberPicker.setVisibility(View.VISIBLE);
+                turnCnt = 0;
+                updateCounter();
                 resetTimer();
 
             }
@@ -182,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
         mNumberPicker.setValue(3);
 
         updateCountDownText();
+    }
+
+    private void updateCounter() {
+        mTurnCounter1.setText("Turns: " + turnCnt);
+        mTurnCounter2.setText("Turns: " + turnCnt);
     }
 
     private void addIncrement() {
