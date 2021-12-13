@@ -44,6 +44,8 @@
         android:background="@null"
         android:scaleType="centerCrop"
         android:src="@drawable/reset_button"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
         app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
@@ -87,6 +89,8 @@
         android:layout_height="70dp"
         android:background="@null"
         android:scaleType="centerCrop"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
         android:src="@drawable/pause_button"
         app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,10 +134,10 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.908"
+        app:layout_constraintHorizontal_bias="0.091"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/startstop_player2"
-        app:layout_constraintVertical_bias="0.054" /><![CDATA[
+        app:layout_constraintVertical_bias="0.05" /><![CDATA[
 
     app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
