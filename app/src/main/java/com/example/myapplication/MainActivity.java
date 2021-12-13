@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     //if True == Player 1
     //If False == Player 2
     private boolean player;
+    private boolean firstmove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,54 +56,69 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         // Set Starting Player
-        player = true;
+        player = false;
+        firstmove = true;
         mTextViewCountDownPlayer1 = findViewById(R.id.counttime_player1);
         mTextViewCountDownPlayer2 = findViewById(R.id.counttime_player2);
 
-        mButtonStartPausePlayer1 = findViewById(R.id.startstop_player1);
-        mButtonStartPausePlayer2 = findViewById(R.id.startstop_player2);
         mButtonReset = findViewById(R.id.reset);
-        mButtonPlayPause = findViewById(R.id.playPause);
+        mButtonReset.setVisibility(View.INVISIBLE);
 
+        mButtonPlayPause = findViewById(R.id.playPause);
+        mButtonPlayPause.setVisibility(View.INVISIBLE);
+
+        mButtonStartPausePlayer1 = findViewById(R.id.startstop_player1);
         mButtonStartPausePlayer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mTimerRunning && player) {
                     pauseTimer();
+                    addIncrement();
                     player = false;
                     startTimer();
                     //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_wasser);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
                     //mButtonStartPausePlayer2.setScaleType(null);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_raw);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
                 } else if (player) {
                     startTimer();
                     player = false;
                     //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_wasser);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
                     //mButtonStartPausePlayer2.setScaleType(null);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_raw);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
+
+                    mButtonReset.setVisibility(View.VISIBLE);
+                    mButtonPlayPause.setVisibility(View.VISIBLE);
+                    mNumberPicker.setVisibility(View.INVISIBLE);
                 }
             }
         });
+
+        mButtonStartPausePlayer2 = findViewById(R.id.startstop_player2);
         mButtonStartPausePlayer2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mTimerRunning && !player) {
                     pauseTimer();
+                    addIncrement();
                     player = true;
                     startTimer();
                     //mButtonStartPausePlayer1.setScaleType(null);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_raw);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                     //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_wasser);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
                 } else if (!player) {
                     startTimer();
-                    player = false;
+                    player = true;
                     //mButtonStartPausePlayer1.setScaleType(null);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_raw);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                     //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_wasser);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+
+                    mButtonReset.setVisibility(View.VISIBLE);
+                    mButtonPlayPause.setVisibility(View.VISIBLE);
+                    mNumberPicker.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -110,7 +126,12 @@ public class MainActivity extends AppCompatActivity {
         mButtonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mButtonReset.setVisibility(View.INVISIBLE);
+                mButtonPlayPause.setVisibility(View.INVISIBLE);
+                mButtonPlayPause.setImageResource(R.drawable.pause_button);
+                mNumberPicker.setVisibility(View.VISIBLE);
                 resetTimer();
+
             }
         });
 
@@ -123,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         String[] arrayString= new String[]{"1 + 0","3 | 2","5 | 3","10 | 5","15 | 10"};
         mNumberPicker.setMinValue(0);
         mNumberPicker.setMaxValue(arrayString.length-1);
-       // mNumberPicker.setValue(3);
+        mNumberPicker.setValue(3);
 
         mNumberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
@@ -141,11 +162,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(newValue == 1){
                     START_TIME_IN_MILLIS = 180000;
-                    INCREMENT_TIME_IN_MILLIS = 3000;
+                    INCREMENT_TIME_IN_MILLIS = 2000;
                 }
                 else if(newValue == 2){
                     START_TIME_IN_MILLIS = 300000;
-                    INCREMENT_TIME_IN_MILLIS = 5000;
+                    INCREMENT_TIME_IN_MILLIS = 3000;
                 }
                 else if(newValue == 3){
                     START_TIME_IN_MILLIS = 600000;
@@ -153,13 +174,22 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(newValue == 4){
                     START_TIME_IN_MILLIS = 900000;
-                    INCREMENT_TIME_IN_MILLIS = 15000;
+                    INCREMENT_TIME_IN_MILLIS = 10000;
                 }
                 resetTimer();
             }
         });
         mNumberPicker.setValue(3);
 
+        updateCountDownText();
+    }
+
+    private void addIncrement() {
+        if (player){
+            mTimeLeftInMillis_Player1 += INCREMENT_TIME_IN_MILLIS;
+        }
+        else
+            mTimeLeftInMillis_Player2 += INCREMENT_TIME_IN_MILLIS;
         updateCountDownText();
     }
 
@@ -218,20 +248,24 @@ public class MainActivity extends AppCompatActivity {
         try {
             mCountDownTimer.cancel();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
+        mTimerRunning = false;
+        player = true;
+        updateCountDownText();
 
         player = false;
         updateCountDownText();
-        player = true;
-        updateCountDownText();
+
 
         //mButtonReset.setVisibility(View.INVISIBLE);
         mButtonStartPausePlayer1.setVisibility(View.VISIBLE);
         mButtonStartPausePlayer2.setVisibility(View.VISIBLE);
 
-        mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_wasser);
-        mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_wasser);
+        mButtonStartPausePlayer1.setImageResource(R.drawable.player1_loading_screen);
+        mButtonStartPausePlayer2.setImageResource(R.drawable.player2_loading_screen);
+
+
     }
 
     private void updateCountDownText() {
@@ -256,6 +290,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void playOrPauseGame() {
         if (mTimerRunning) {
+            mButtonPlayPause.setImageResource(R.drawable.play_button);
+            mButtonStartPausePlayer1.setClickable(false);
+            mButtonStartPausePlayer2.setClickable(false);
             pauseTimer();
             if(player){
                 try {
@@ -277,6 +314,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } else {
+            mButtonPlayPause.setImageResource(R.drawable.pause_button);
+            mButtonStartPausePlayer1.setClickable(true);
+            mButtonStartPausePlayer2.setClickable(true);
             startTimer();
             if(player){
                 try {
