@@ -147,6 +147,10 @@ public class MainActivity extends AppCompatActivity {
                 mButtonPlayPause.setVisibility(View.INVISIBLE);
                 mButtonPlayPause.setImageResource(R.drawable.pause_button);
                 mNumberPicker.setVisibility(View.VISIBLE);
+
+                if(!mTimerRunning)
+                    playOrPauseGame();
+
                 turnCnt = 0;
                 updateCounter();
                 resetTimer();
