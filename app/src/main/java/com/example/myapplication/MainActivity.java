@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
         catch (NullPointerException e){}
 
         setContentView(R.layout.activity_main);
-        // Set Starting Player
-        player = false;
-        turnCnt = 0;
 
         mTextViewCountDownPlayer1 = findViewById(R.id.counttime_player1);
         mTextViewCountDownPlayer2 = findViewById(R.id.counttime_player2);
@@ -203,6 +200,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mNumberPicker.setValue(3);
+
+        if(savedInstanceState != null){
+            player = savedInstanceState.getBoolean("player");
+            mTimerRunning = savedInstanceState.getBoolean("timerRunning");
+            mEndTimePlayer1 = savedInstanceState.getLong("endTimePlayer1");
+            mEndTimePlayer2 = savedInstanceState.getLong("endTimePlayer2");
+            mTimeLeftInMillis_Player1 = savedInstanceState.getLong("millisLeftPlayer1");
+            mTimeLeftInMillis_Player2 = savedInstanceState.getLong("millisLeftPlayer2");
+            turnCnt = savedInstanceState.getShort("mTurnCnt");
+            INCREMENT_TIME_IN_MILLIS = savedInstanceState.getShort("incrementTime");
+            START_TIME_IN_MILLIS = savedInstanceState.getLong("startingTime");
+
+            if (mTimerRunning) {
+                mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
+                mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
+                updateCountDownText();
+                startTimer();
+            }
+            else{
+                updateCountDownText();
+            }
+        }
+        else {
+            // Set Starting Player
+            player = false;
+            turnCnt = 0;
+        }
 
         updateCountDownText();
     }
@@ -379,21 +403,13 @@ public class MainActivity extends AppCompatActivity {
         outState.putBoolean("player", player);
         outState.putLong("endTimePlayer1", mEndTimePlayer1);
         outState.putLong("endTimePlayer2", mEndTimePlayer2);
+        outState.putShort("incrementTime", INCREMENT_TIME_IN_MILLIS);
+        outState.putLong("startingTime", START_TIME_IN_MILLIS);
+        outState.putShort("mTurnCnt", turnCnt);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        updateCountDownText();
-        updateButtons();
-
-        if (mTimerRunning) {
-            mEndTimePlayer1 = savedInstanceState.getLong("endTimePlayer1");
-            mEndTimePlayer2 = savedInstanceState.getLong("endTimePlayer2");
-            player = savedInstanceState.getBoolean("player");
-            mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
-            mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
-            startTimer();
-        }
     }
 }
