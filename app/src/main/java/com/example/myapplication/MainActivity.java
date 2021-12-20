@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer mCountDownTimer;
 
     private boolean mTimerRunning;
+    private boolean mIsPaused;
 
     private long mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
     private long mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState != null){
             player = savedInstanceState.getBoolean("player");
             mTimerRunning = savedInstanceState.getBoolean("timerRunning");
+            mIsPaused = savedInstanceState.getBoolean("isPaused");
             mEndTimePlayer1 = savedInstanceState.getLong("endTimePlayer1");
             mEndTimePlayer2 = savedInstanceState.getLong("endTimePlayer2");
             mTimeLeftInMillis_Player1 = savedInstanceState.getLong("millisLeftPlayer1");
@@ -211,13 +213,17 @@ public class MainActivity extends AppCompatActivity {
             turnCnt = savedInstanceState.getShort("mTurnCnt");
             INCREMENT_TIME_IN_MILLIS = savedInstanceState.getShort("incrementTime");
             START_TIME_IN_MILLIS = savedInstanceState.getLong("startingTime");
-
-            if (mTimerRunning) {
+            player = !player;
+            updateCountDownText();
+            player = !player;
+            if (mTimerRunning | mIsPaused) {
                 mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
                 mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
                 mButtonPlayPause.setVisibility(View.VISIBLE);
                 mButtonReset.setVisibility(View.VISIBLE);
                 mNumberPicker.setVisibility(View.INVISIBLE);
+                mTextViewCountDownPlayer1.setVisibility(View.VISIBLE);
+                mTextViewCountDownPlayer2.setVisibility(View.VISIBLE);
                 if (player){
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
@@ -229,7 +235,35 @@ public class MainActivity extends AppCompatActivity {
 
 
                 updateCountDownText();
-                startTimer();
+                if (!mIsPaused){
+                    mButtonPlayPause.setImageResource(R.drawable.pause_button);
+                    startTimer();
+                }
+                else if (mIsPaused){
+                    mButtonPlayPause.setImageResource(R.drawable.play_button);
+
+                    if(player){
+                        try {
+                            ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+
+                        }catch (Exception e) {
+                            System.out.println("Fehler beim stoppen des Gifs");
+                            System.out.println(e);
+                        }
+                    }
+                    else{
+                        try {
+                            ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
+
+                        }catch (Exception e) {
+                            System.out.println("Fehler beim starten des Gifs");
+                            System.out.println(e);
+                        }
+                    }
+
+
+                }
+
             }
             else{
                 mNumberPicker.setVisibility(View.VISIBLE);
@@ -363,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
             mButtonStartPausePlayer1.setClickable(false);
             mButtonStartPausePlayer2.setClickable(false);
             pauseTimer();
+            mIsPaused = true;
             if(player){
                 try {
                     ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
@@ -387,6 +422,7 @@ public class MainActivity extends AppCompatActivity {
             mButtonStartPausePlayer1.setClickable(true);
             mButtonStartPausePlayer2.setClickable(true);
             startTimer();
+            mIsPaused = false;
             if(player){
                 try {
                     ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).start();
@@ -418,6 +454,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putLong("millisLeftPlayer2", mTimeLeftInMillis_Player2);
         outState.putBoolean("timerRunning", mTimerRunning);
         outState.putBoolean("player", player);
+        outState.putBoolean("isPaused", mIsPaused);
         outState.putLong("endTimePlayer1", mEndTimePlayer1);
         outState.putLong("endTimePlayer2", mEndTimePlayer2);
         outState.putShort("incrementTime", INCREMENT_TIME_IN_MILLIS);
