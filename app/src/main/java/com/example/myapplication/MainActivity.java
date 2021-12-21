@@ -165,7 +165,9 @@ public class MainActivity extends AppCompatActivity {
         String[] arrayString= new String[]{"1 + 0","3 | 2","5 | 3","10 | 5","15 | 10"};
         mNumberPicker.setMinValue(0);
         mNumberPicker.setMaxValue(arrayString.length-1);
+        mNumberPicker.setDisplayedValues(arrayString);
         mNumberPicker.setValue(3);
+
 
         mNumberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 resetTimer();
             }
         });
-        mNumberPicker.setValue(3);
+        updateCountDownText();
 
         if(savedInstanceState != null){
             player = savedInstanceState.getBoolean("player");
