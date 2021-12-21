@@ -217,18 +217,18 @@ public class MainActivity extends AppCompatActivity {
             updateCountDownText();
             player = !player;
             if (mTimerRunning | mIsPaused) {
-                mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
-                mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
                 mButtonPlayPause.setVisibility(View.VISIBLE);
                 mButtonReset.setVisibility(View.VISIBLE);
                 mNumberPicker.setVisibility(View.INVISIBLE);
                 mTextViewCountDownPlayer1.setVisibility(View.VISIBLE);
                 mTextViewCountDownPlayer2.setVisibility(View.VISIBLE);
                 if (player){
+                    mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
                 }
                 else{
+                    mTimeLeftInMillis_Player1 = mEndTimePlayer2 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
                 }
@@ -241,6 +241,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (mIsPaused){
                     mButtonPlayPause.setImageResource(R.drawable.play_button);
+                    mButtonStartPausePlayer1.setClickable(false);
+                    mButtonStartPausePlayer2.setClickable(false);
 
                     if(player){
                         try {
@@ -269,6 +271,8 @@ public class MainActivity extends AppCompatActivity {
                 mNumberPicker.setVisibility(View.VISIBLE);
                 mButtonReset.setVisibility(View.INVISIBLE);
                 mButtonPlayPause.setVisibility(View.INVISIBLE);
+                System.out.println(mTimeLeftInMillis_Player1);
+                System.out.println(mTimeLeftInMillis_Player2);
 
                 updateCountDownText();
             }
@@ -300,7 +304,13 @@ public class MainActivity extends AppCompatActivity {
     private void startTimer() {
         if (player)
             mEndTimePlayer1 = System.currentTimeMillis() + mTimeLeftInMillis_Player1;
-        else mEndTimePlayer2 = System.currentTimeMillis() + mTimeLeftInMillis_Player2;
+        else {
+            mEndTimePlayer2 = System.currentTimeMillis() + mTimeLeftInMillis_Player2;
+            if (mEndTimePlayer1 == 0) {
+                mEndTimePlayer1 = System.currentTimeMillis() + mTimeLeftInMillis_Player1;
+            }
+        }
+
 
         mCountDownTimer = new CountDownTimer(getCurrentTimeLeft(), 1000) {
             @Override
@@ -348,6 +358,9 @@ public class MainActivity extends AppCompatActivity {
     private void resetTimer() {
         mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
         mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
+
+        mEndTimePlayer1 = 0;
+        mEndTimePlayer2 = 0;
         try {
             mCountDownTimer.cancel();
         } catch (Exception e) {
