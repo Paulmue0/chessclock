@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
                 }
                 else{
-                    mTimeLeftInMillis_Player1 = mEndTimePlayer2 - System.currentTimeMillis();
+                    mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
                 }
