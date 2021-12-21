@@ -223,12 +223,12 @@ public class MainActivity extends AppCompatActivity {
                 mTextViewCountDownPlayer1.setVisibility(View.VISIBLE);
                 mTextViewCountDownPlayer2.setVisibility(View.VISIBLE);
                 if (player){
-                    mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
+                    if (!mIsPaused) mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
                 }
                 else{
-                    mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
+                   if (!mIsPaused) mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
                 }
