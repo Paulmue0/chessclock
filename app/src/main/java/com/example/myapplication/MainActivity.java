@@ -3,6 +3,8 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.view.View;
@@ -319,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        mCountDownTimer = new CountDownTimer(getCurrentTimeLeft(), 1000) {
+        mCountDownTimer = new CountDownTimer(getCurrentTimeLeft(), 100) {
             @Override
             public void onTick(long millisUntilFinished) {
                 setCurrentTimeLeft(millisUntilFinished);
@@ -378,6 +380,9 @@ public class MainActivity extends AppCompatActivity {
         mEndTimePlayer1 = 0;
         mEndTimePlayer2 = 0;
 
+        mTextViewCountDownPlayer1.setTextColor(Color.GRAY);
+        mTextViewCountDownPlayer2.setTextColor(Color.GRAY);
+
         isFinished = false;
         try {
             mCountDownTimer.cancel();
@@ -410,14 +415,32 @@ public class MainActivity extends AppCompatActivity {
         if (player) {
             int minutes = (int) (mTimeLeftInMillis_Player1 / 1000) / 60;
             int seconds = (int) (mTimeLeftInMillis_Player1 / 1000) % 60;
-            String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+            int millis = (int) (((mTimeLeftInMillis_Player1) %1000)/100);
+
+            String timeLeftFormatted = "";
+            if(minutes < 1){
+                timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", minutes, seconds, millis);
+                mTextViewCountDownPlayer1.setTextColor(0xffe42f03);
+            }
+            else{
+                timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+            }
+
 
             mTextViewCountDownPlayer1.setText(timeLeftFormatted);
         } else {
             int minutes = (int) (mTimeLeftInMillis_Player2 / 1000) / 60;
             int seconds = (int) (mTimeLeftInMillis_Player2 / 1000) % 60;
-            String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+            int millis = (int) (((mTimeLeftInMillis_Player2) %1000)/100);
 
+            String timeLeftFormatted = "";
+            if(minutes < 1){
+                timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", minutes, seconds, millis);
+                mTextViewCountDownPlayer2.setTextColor(0xffe42f03);
+            }
+            else{
+                timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+            }
             mTextViewCountDownPlayer2.setText(timeLeftFormatted);
         }
     }
