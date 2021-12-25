@@ -8,13 +8,12 @@ import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageButton;
@@ -56,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         try
         {
-            this.getSupportActionBar().hide();
+            Objects.requireNonNull(this.getSupportActionBar()).hide();
         }
-        catch (NullPointerException e){}
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -79,90 +80,78 @@ public class MainActivity extends AppCompatActivity {
         mButtonPlayPause.setVisibility(View.INVISIBLE);
 
         mButtonStartPausePlayer1 = findViewById(R.id.startstop_player1);
-        mButtonStartPausePlayer1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mTimerRunning && player) {
-                    pauseTimer();
-                    addIncrement();
-                    player = false;
-                    startTimer();
-                    //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
-                    //mButtonStartPausePlayer2.setScaleType(null);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
-                    turnCnt++;
-                    updateCounter();
-                } else if (player) {
-                    startTimer();
-                    player = false;
-                    //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
-                    //mButtonStartPausePlayer2.setScaleType(null);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
+        mButtonStartPausePlayer1.setOnClickListener(v -> {
+            if (mTimerRunning && player) {
+                pauseTimer();
+                addIncrement();
+                player = false;
+                startTimer();
+                //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                //mButtonStartPausePlayer2.setScaleType(null);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
+                turnCnt++;
+                updateCounter();
+            } else if (player) {
+                startTimer();
+                player = false;
+                //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                //mButtonStartPausePlayer2.setScaleType(null);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
 
-                    mButtonReset.setVisibility(View.VISIBLE);
-                    mButtonPlayPause.setVisibility(View.VISIBLE);
-                    mNumberPicker.setVisibility(View.INVISIBLE);
-                }
+                mButtonReset.setVisibility(View.VISIBLE);
+                mButtonPlayPause.setVisibility(View.VISIBLE);
+                mNumberPicker.setVisibility(View.INVISIBLE);
             }
         });
 
         mButtonStartPausePlayer2 = findViewById(R.id.startstop_player2);
-        mButtonStartPausePlayer2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mTimerRunning && !player) {
-                    pauseTimer();
-                    addIncrement();
-                    player = true;
-                    startTimer();
-                    //mButtonStartPausePlayer1.setScaleType(null);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
-                    //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
-                } else if (!player) {
-                    startTimer();
-                    player = true;
-                    //mButtonStartPausePlayer1.setScaleType(null);
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
-                    //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+        mButtonStartPausePlayer2.setOnClickListener(v -> {
+            if (mTimerRunning && !player) {
+                pauseTimer();
+                addIncrement();
+                player = true;
+                startTimer();
+                //mButtonStartPausePlayer1.setScaleType(null);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
+                //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+            } else if (!player) {
+                startTimer();
+                player = true;
+                //mButtonStartPausePlayer1.setScaleType(null);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
+                //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
 
-                    mTurnCounter1.setVisibility(View.VISIBLE);
-                    mTurnCounter2.setVisibility(View.VISIBLE);
-                    mButtonReset.setVisibility(View.VISIBLE);
-                    mButtonPlayPause.setVisibility(View.VISIBLE);
-                    mNumberPicker.setVisibility(View.INVISIBLE);
-                    updateCounter();
-                }
-            }
-        });
-
-        mButtonReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTurnCounter1.setVisibility(View.INVISIBLE);
-                mTurnCounter2.setVisibility(View.INVISIBLE);
-                mButtonReset.setVisibility(View.INVISIBLE);
-                mButtonPlayPause.setVisibility(View.INVISIBLE);
-                mButtonPlayPause.setImageResource(R.drawable.pause_button);
-                mNumberPicker.setVisibility(View.VISIBLE);
-
-                if(!mTimerRunning)
-                    playOrPauseGame();
-
-                turnCnt = 0;
+                mTurnCounter1.setVisibility(View.VISIBLE);
+                mTurnCounter2.setVisibility(View.VISIBLE);
+                mButtonReset.setVisibility(View.VISIBLE);
+                mButtonPlayPause.setVisibility(View.VISIBLE);
+                mNumberPicker.setVisibility(View.INVISIBLE);
                 updateCounter();
-                resetTimer();
-
             }
         });
 
-        mButtonPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { playOrPauseGame(); }
+        mButtonReset.setOnClickListener(v -> {
+            mTurnCounter1.setVisibility(View.INVISIBLE);
+            mTurnCounter2.setVisibility(View.INVISIBLE);
+            mButtonReset.setVisibility(View.INVISIBLE);
+            mButtonPlayPause.setVisibility(View.INVISIBLE);
+            mButtonPlayPause.setImageResource(R.drawable.pause_button);
+            mNumberPicker.setVisibility(View.VISIBLE);
+
+            if(!mTimerRunning)
+                playOrPauseGame();
+
+            turnCnt = 0;
+            updateCounter();
+            resetTimer();
+
         });
+
+        mButtonPlayPause.setOnClickListener(view -> playOrPauseGame());
 
         mNumberPicker = findViewById(R.id.picker);
         String[] arrayString= new String[]{"1 + 0","3 | 2","5 | 3","10 | 5","15 | 10"};
@@ -172,38 +161,29 @@ public class MainActivity extends AppCompatActivity {
         mNumberPicker.setValue(3);
 
 
-        mNumberPicker.setFormatter(new NumberPicker.Formatter() {
-            @Override
-            public String format(int value) {
-                // TODO Auto-generated method stub
-                return arrayString[value];
+        mNumberPicker.setFormatter(value -> arrayString[value]);
+        mNumberPicker.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
+            if (newValue == 0){
+                START_TIME_IN_MILLIS = 60000;
+                INCREMENT_TIME_IN_MILLIS = 0;
             }
-        });
-        mNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
-                if (newValue == 0){
-                    START_TIME_IN_MILLIS = 60000;
-                    INCREMENT_TIME_IN_MILLIS = 0;
-                }
-                else if(newValue == 1){
-                    START_TIME_IN_MILLIS = 180000;
-                    INCREMENT_TIME_IN_MILLIS = 2000;
-                }
-                else if(newValue == 2){
-                    START_TIME_IN_MILLIS = 300000;
-                    INCREMENT_TIME_IN_MILLIS = 3000;
-                }
-                else if(newValue == 3){
-                    START_TIME_IN_MILLIS = 600000;
-                    INCREMENT_TIME_IN_MILLIS = 5000;
-                }
-                else if(newValue == 4){
-                    START_TIME_IN_MILLIS = 900000;
-                    INCREMENT_TIME_IN_MILLIS = 10000;
-                }
-                resetTimer();
+            else if(newValue == 1){
+                START_TIME_IN_MILLIS = 180000;
+                INCREMENT_TIME_IN_MILLIS = 2000;
             }
+            else if(newValue == 2){
+                START_TIME_IN_MILLIS = 300000;
+                INCREMENT_TIME_IN_MILLIS = 3000;
+            }
+            else if(newValue == 3){
+                START_TIME_IN_MILLIS = 600000;
+                INCREMENT_TIME_IN_MILLIS = 5000;
+            }
+            else if(newValue == 4){
+                START_TIME_IN_MILLIS = 900000;
+                INCREMENT_TIME_IN_MILLIS = 10000;
+            }
+            resetTimer();
         });
         updateCountDownText();
 
@@ -245,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                     mButtonPlayPause.setImageResource(R.drawable.pause_button);
                     startTimer();
                 }
-                else if (mIsPaused){
+                else{
                     mButtonPlayPause.setImageResource(R.drawable.play_button);
                     mButtonStartPausePlayer1.setClickable(false);
                     mButtonStartPausePlayer2.setClickable(false);
@@ -255,8 +235,7 @@ public class MainActivity extends AppCompatActivity {
                             ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
 
                         }catch (Exception e) {
-                            System.out.println("Fehler beim stoppen des Gifs");
-                            System.out.println(e);
+                            e.printStackTrace();
                         }
                     }
                     else{
@@ -264,8 +243,7 @@ public class MainActivity extends AppCompatActivity {
                             ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
 
                         }catch (Exception e) {
-                            System.out.println("Fehler beim starten des Gifs");
-                            System.out.println(e);
+                            e.printStackTrace();
                         }
                     }
 
@@ -295,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
         updateCountDownText();
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateCounter() {
         mTurnCounter1.setText("Turns: " + turnCnt);
         mTurnCounter2.setText("Turns: " + turnCnt);
@@ -417,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
             int seconds = (int) (mTimeLeftInMillis_Player1 / 1000) % 60;
             int millis = (int) (((mTimeLeftInMillis_Player1) %1000)/100);
 
-            String timeLeftFormatted = "";
+            String timeLeftFormatted;
             if(minutes < 1){
                 timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", minutes, seconds, millis);
                 mTextViewCountDownPlayer1.setTextColor(0xffe42f03);
@@ -433,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
             int seconds = (int) (mTimeLeftInMillis_Player2 / 1000) % 60;
             int millis = (int) (((mTimeLeftInMillis_Player2) %1000)/100);
 
-            String timeLeftFormatted = "";
+            String timeLeftFormatted;
             if(minutes < 1){
                 timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", minutes, seconds, millis);
                 mTextViewCountDownPlayer2.setTextColor(0xffe42f03);
@@ -443,10 +422,6 @@ public class MainActivity extends AppCompatActivity {
             }
             mTextViewCountDownPlayer2.setText(timeLeftFormatted);
         }
-    }
-
-    private void updateButtons() {
-       //TODO: Add visibility of buttons
     }
 
     private void playOrPauseGame() {
@@ -461,8 +436,7 @@ public class MainActivity extends AppCompatActivity {
                     ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
 
                 }catch (Exception e) {
-                    System.out.println("Fehler beim stoppen des Gifs");
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             }
             else{
@@ -470,8 +444,7 @@ public class MainActivity extends AppCompatActivity {
                     ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
 
                 }catch (Exception e) {
-                    System.out.println("Fehler beim starten des Gifs");
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             }
 
@@ -486,8 +459,7 @@ public class MainActivity extends AppCompatActivity {
                     ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).start();
 
                 }catch (Exception e) {
-                    System.out.println("Fehler beim starten des Gifs");
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             }
             else{
@@ -495,8 +467,7 @@ public class MainActivity extends AppCompatActivity {
                     ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).start();
 
                 }catch (Exception e) {
-                    System.out.println("Fehler beim starten des Gifs");
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             }
 
