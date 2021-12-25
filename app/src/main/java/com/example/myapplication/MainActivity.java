@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
                 if (newValue == 0){
-                    START_TIME_IN_MILLIS = 2000;
+                    START_TIME_IN_MILLIS = 60000;
                     INCREMENT_TIME_IN_MILLIS = 0;
                 }
                 else if(newValue == 1){
