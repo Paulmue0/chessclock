@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mTimerRunning;
     private boolean mIsPaused;
+    boolean isFinished;
 
     private long mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
     private long mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
                 if (newValue == 0){
-                    START_TIME_IN_MILLIS = 60000;
+                    START_TIME_IN_MILLIS = 2000;
                     INCREMENT_TIME_IN_MILLIS = 0;
                 }
                 else if(newValue == 1){
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState != null){
             player = savedInstanceState.getBoolean("player");
+            isFinished = savedInstanceState.getBoolean("isFinished");
             mTimerRunning = savedInstanceState.getBoolean("timerRunning");
             mIsPaused = savedInstanceState.getBoolean("isPaused");
             mEndTimePlayer1 = savedInstanceState.getLong("endTimePlayer1");
@@ -226,13 +228,13 @@ public class MainActivity extends AppCompatActivity {
                 mTextViewCountDownPlayer2.setVisibility(View.VISIBLE);
                 if (player){
                     if (!mIsPaused) mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg_aseprite);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
                 }
                 else{
                    if (!mIsPaused) mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg_aseprite);
                 }
 
 
@@ -268,6 +270,9 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
+            }
+            else if(isFinished){
+                resetTimer();
             }
             else{
                 mNumberPicker.setVisibility(View.VISIBLE);
@@ -324,9 +329,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 mTimerRunning = false;
-                mButtonStartPausePlayer1.setVisibility(View.INVISIBLE);
-                mButtonStartPausePlayer2.setVisibility(View.INVISIBLE);
+                isFinished = true;
+                mButtonStartPausePlayer1.setClickable(false);
+                mButtonStartPausePlayer2.setClickable(false);
+                mButtonPlayPause.setClickable(false);
                 mButtonReset.setVisibility(View.VISIBLE);
+                if(player){
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg_aseprite_winning);
+                }
+                else{
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg_aseprite_winning);
+                }
+                player = false;
             }
         }.start();
 
@@ -363,6 +377,8 @@ public class MainActivity extends AppCompatActivity {
 
         mEndTimePlayer1 = 0;
         mEndTimePlayer2 = 0;
+
+        isFinished = false;
         try {
             mCountDownTimer.cancel();
         } catch (Exception e) {
@@ -378,7 +394,11 @@ public class MainActivity extends AppCompatActivity {
 
         //mButtonReset.setVisibility(View.INVISIBLE);
         mButtonStartPausePlayer1.setVisibility(View.VISIBLE);
+        mButtonStartPausePlayer2.setClickable(true);
         mButtonStartPausePlayer2.setVisibility(View.VISIBLE);
+        mButtonStartPausePlayer2.setClickable(true);
+
+        mButtonPlayPause.setClickable(true);
 
         mButtonStartPausePlayer1.setImageResource(R.drawable.player1_loading_screen);
         mButtonStartPausePlayer2.setImageResource(R.drawable.player2_loading_screen);
@@ -469,6 +489,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putLong("millisLeftPlayer2", mTimeLeftInMillis_Player2);
         outState.putBoolean("timerRunning", mTimerRunning);
         outState.putBoolean("player", player);
+        outState.putBoolean("isFinished", isFinished);
         outState.putBoolean("isPaused", mIsPaused);
         outState.putLong("endTimePlayer1", mEndTimePlayer1);
         outState.putLong("endTimePlayer2", mEndTimePlayer2);
