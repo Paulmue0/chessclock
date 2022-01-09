@@ -1,8 +1,8 @@
-package com.example.myapplication;
+package com.chessapp.mychessapp;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.CountDownTimer;
@@ -12,12 +12,14 @@ import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.example.mychessapp.R;
+
 import java.util.Locale;
 import java.util.Objects;
-
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageButton;
 
+@Keep
 public class MainActivity extends AppCompatActivity {
     private long START_TIME_IN_MILLIS = 600000;
     private short INCREMENT_TIME_IN_MILLIS = 0;

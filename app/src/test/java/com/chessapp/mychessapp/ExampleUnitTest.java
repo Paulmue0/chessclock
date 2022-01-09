@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.chessapp.mychessapp;
 
 import org.junit.Test;
 
