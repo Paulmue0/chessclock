@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 player = false;
                 startTimer();
                 //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
                 //mButtonStartPausePlayer2.setScaleType(null);
                 mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
                 turnCnt++;
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 startTimer();
                 player = false;
                 //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
                 //mButtonStartPausePlayer2.setScaleType(null);
                 mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
 
@@ -118,14 +118,14 @@ public class MainActivity extends AppCompatActivity {
                 //mButtonStartPausePlayer1.setScaleType(null);
                 mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                 //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.smoking_pelican);
             } else if (!player) {
                 startTimer();
                 player = true;
                 //mButtonStartPausePlayer1.setScaleType(null);
                 mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                 //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.smoking_pelican);
 
                 mTurnCounter1.setVisibility(View.VISIBLE);
                 mTurnCounter2.setVisibility(View.VISIBLE);
@@ -213,14 +213,13 @@ public class MainActivity extends AppCompatActivity {
                 if (player){
                     if (!mIsPaused) mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg_aseprite);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.smoking_pelican);
                 }
                 else{
                    if (!mIsPaused) mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg_aseprite);
                 }
-
 
                 updateCountDownText();
                 if (!mIsPaused){
@@ -232,24 +231,13 @@ public class MainActivity extends AppCompatActivity {
                     mButtonStartPausePlayer1.setClickable(false);
                     mButtonStartPausePlayer2.setClickable(false);
 
-                    if(player){
-                        try {
-                            ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+                    try {
+                        ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+                        ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
 
-                        }catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    else{
-                        try {
-                            ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
-
-                        }catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-
                 }
 
             }
@@ -361,8 +349,8 @@ public class MainActivity extends AppCompatActivity {
         mEndTimePlayer1 = 0;
         mEndTimePlayer2 = 0;
 
-        mTextViewCountDownPlayer1.setTextColor(Color.GRAY);
-        mTextViewCountDownPlayer2.setTextColor(Color.GRAY);
+        mTextViewCountDownPlayer1.setTextColor(Color.BLACK);
+        mTextViewCountDownPlayer2.setTextColor(Color.BLACK);
 
         isFinished = false;
         try {
@@ -433,21 +421,11 @@ public class MainActivity extends AppCompatActivity {
             mButtonStartPausePlayer2.setClickable(false);
             pauseTimer();
             mIsPaused = true;
-            if(player){
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            else{
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+                ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
+            }catch (Exception e) {
+                e.printStackTrace();
             }
 
         } else {
@@ -456,23 +434,13 @@ public class MainActivity extends AppCompatActivity {
             mButtonStartPausePlayer2.setClickable(true);
             startTimer();
             mIsPaused = false;
-            if(player){
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).start();
+            try {
+                ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).start();
+                ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).start();
 
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
+            }catch (Exception e) {
+                e.printStackTrace();
             }
-            else{
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).start();
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
         }
 
 
