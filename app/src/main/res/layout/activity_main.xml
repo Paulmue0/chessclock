@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.chessapp.mychessapp.MainActivity">
 
     <TextView
         android:id="@+id/counttime_player1"
@@ -15,6 +15,8 @@
         android:elevation="10dp"
         android:fontFamily="@font/pixeboy"
         android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -30,6 +32,7 @@
         android:fontFamily="@font/pixeboy"
         android:gravity="center"
         android:rotation="180"
+        android:textColor="@color/black"
         android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
@@ -122,10 +125,10 @@
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.908"
+        app:layout_constraintHorizontal_bias="0.091"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/startstop_player2"
-        app:layout_constraintVertical_bias="0.977" />
+        app:layout_constraintVertical_bias="0.965" />
 
     <TextView
         android:id="@+id/turnCounter2"
@@ -137,10 +140,10 @@
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.091"
+        app:layout_constraintHorizontal_bias="0.908"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/startstop_player2"
-        app:layout_constraintVertical_bias="0.05" /><![CDATA[
+        app:layout_constraintVertical_bias="0.04" /><![CDATA[
 
     app:layout_constraintBottom_toBottomOf="@+id/startstop_player1"
         app:layout_constraintEnd_toEndOf="parent"
