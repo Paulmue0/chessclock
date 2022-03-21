@@ -20,9 +20,9 @@ import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageButton;
 
 @Keep
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PickTimeDialog.PickTimeDialogListener{
     private long START_TIME_IN_MILLIS = 600000;
-    private short INCREMENT_TIME_IN_MILLIS = 0;
+    private int INCREMENT_TIME_IN_MILLIS = 0;
 
     private TextView mTextViewCountDownPlayer1;
     private TextView mTextViewCountDownPlayer2;
@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton mButtonReset;
     private ImageButton mButtonPlayPause;
     private NumberPicker mNumberPicker;
-
 
     private CountDownTimer mCountDownTimer;
 
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonPlayPause.setOnClickListener(view -> playOrPauseGame());
 
         mNumberPicker = findViewById(R.id.picker);
-        String[] arrayString= new String[]{"1 + 0","3 | 2","5 | 3","10 | 5","15 | 10"};
+        String[] arrayString= new String[]{"1 + 0","3 + 2","5 + 3","10 + 5","15 + 10", "custom time"};
         mNumberPicker.setMinValue(0);
         mNumberPicker.setMaxValue(arrayString.length-1);
         mNumberPicker.setDisplayedValues(arrayString);
@@ -164,6 +163,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         mNumberPicker.setFormatter(value -> arrayString[value]);
+
+        mNumberPicker.setOnScrollListener((numberPicker, scrollState) -> {
+            if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
+                if(mNumberPicker.getValue() == 5)
+                    openPickTimeDialog();
+        });
+
         mNumberPicker.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
             if (newValue == 0){
                 START_TIME_IN_MILLIS = 60000;
@@ -199,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             mTimeLeftInMillis_Player1 = savedInstanceState.getLong("millisLeftPlayer1");
             mTimeLeftInMillis_Player2 = savedInstanceState.getLong("millisLeftPlayer2");
             turnCnt = savedInstanceState.getShort("mTurnCnt");
-            INCREMENT_TIME_IN_MILLIS = savedInstanceState.getShort("incrementTime");
+            INCREMENT_TIME_IN_MILLIS = savedInstanceState.getInt("incrementTime");
             START_TIME_IN_MILLIS = savedInstanceState.getLong("startingTime");
             player = !player;
             updateCountDownText();
@@ -261,6 +267,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         updateCountDownText();
+    }
+
+    private void openPickTimeDialog() {
+        PickTimeDialog pickTimeDialog = new PickTimeDialog();
+        pickTimeDialog.show(getSupportFragmentManager(), "pick time dialog");
     }
 
     @SuppressLint("SetTextI18n")
@@ -442,8 +453,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
-
     }
 
     @Override
@@ -457,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putBoolean("isPaused", mIsPaused);
         outState.putLong("endTimePlayer1", mEndTimePlayer1);
         outState.putLong("endTimePlayer2", mEndTimePlayer2);
-        outState.putShort("incrementTime", INCREMENT_TIME_IN_MILLIS);
+        outState.putInt("incrementTime", INCREMENT_TIME_IN_MILLIS);
         outState.putLong("startingTime", START_TIME_IN_MILLIS);
         outState.putShort("mTurnCnt", turnCnt);
     }
@@ -465,5 +474,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void applyTexts(long baseTime, int bonusTime) {
+        //TODO: remove this line
+        System.out.println("\nbase: " + baseTime + "\nbonus: " + bonusTime);
+        if (baseTime > 0){
+            START_TIME_IN_MILLIS = baseTime;
+            INCREMENT_TIME_IN_MILLIS = bonusTime;
+        }
+        resetTimer();
     }
 }

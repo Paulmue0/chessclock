@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Dokumente/Schachuhr/app/src/main/res/layout-land/activity_main.xml" value="0.16887125220458554" />
-        <entry key="..\:/Dokumente/Schachuhr/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Dokumente/Schachuhr/app/src/main/res/layout-land/activity_main.xml" value="0.67" />
+        <entry key="..\:/Dokumente/Schachuhr/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Dokumente/Schachuhr/app/src/main/res/layout/layout_picktime_dialog.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.1390625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15064800543695" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.16510416666666666" />
