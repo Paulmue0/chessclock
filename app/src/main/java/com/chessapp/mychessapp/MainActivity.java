@@ -32,7 +32,9 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
     private GifImageButton mButtonStartPausePlayer2;
     private ImageButton mButtonReset;
     private ImageButton mButtonPlayPause;
+
     private NumberPicker mNumberPicker;
+    private String[] arrayString;
 
     private CountDownTimer mCountDownTimer;
 
@@ -63,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         }
 
         setContentView(R.layout.activity_main);
+
+        mNumberPicker = findViewById(R.id.picker);
 
         mTextViewCountDownPlayer1 = findViewById(R.id.counttime_player1);
         mTextViewCountDownPlayer2 = findViewById(R.id.counttime_player2);
@@ -152,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
         });
 
+        //TODO: Refractor this
+        /*
         mButtonPlayPause.setOnClickListener(view -> playOrPauseGame());
 
         mNumberPicker = findViewById(R.id.picker);
@@ -193,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             }
             resetTimer();
         });
+
+         */
         updateCountDownText();
 
         if(savedInstanceState != null){
@@ -205,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             mTimeLeftInMillis_Player1 = savedInstanceState.getLong("millisLeftPlayer1");
             mTimeLeftInMillis_Player2 = savedInstanceState.getLong("millisLeftPlayer2");
             turnCnt = savedInstanceState.getShort("mTurnCnt");
+            arrayString = savedInstanceState.getStringArray("arrayString");
             INCREMENT_TIME_IN_MILLIS = savedInstanceState.getInt("incrementTime");
             START_TIME_IN_MILLIS = savedInstanceState.getLong("startingTime");
             player = !player;
@@ -264,8 +273,10 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             // Set Starting Player
             player = false;
             turnCnt = 0;
+            // Initialize Menu
+            arrayString = new String[]{"1 + 0","3 + 2","5 + 3","10 + 5","15 + 10", "custom time"};
         }
-
+        initTimePicker(arrayString);
         updateCountDownText();
     }
 
@@ -366,8 +377,10 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         isFinished = false;
         try {
             mCountDownTimer.cancel();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NullPointerException e) {
+            //TODO: better exception handling
+            //throw new NullPointerException("no countdown to be canceled");
+            System.err.println("no countdown to be canceled");
         }
         mTimerRunning = false;
         player = true;
@@ -455,6 +468,47 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         }
     }
 
+    private void initTimePicker(String[] menuList){
+        mButtonPlayPause.setOnClickListener(view -> playOrPauseGame());
+
+        mNumberPicker.setDisplayedValues(menuList);
+        mNumberPicker.setMinValue(0);
+        mNumberPicker.setMaxValue(menuList.length-1);
+        if (mNumberPicker.getMaxValue() > 5)
+            mNumberPicker.setValue(mNumberPicker.getMaxValue());
+        else
+            mNumberPicker.setValue(3);
+
+
+        mNumberPicker.setFormatter(value -> menuList[value]);
+
+        mNumberPicker.setOnScrollListener((numberPicker, scrollState) -> {
+            if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
+                if(mNumberPicker.getValue() == 5)
+                    openPickTimeDialog();
+        });
+
+        mNumberPicker.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
+
+            // If Value is not pick custom Time
+            if (newValue != 5){
+                int[] times = getTimesOutOfMenuString(menuList[newValue]);
+                START_TIME_IN_MILLIS = times[0] * 60 * 1000;
+                INCREMENT_TIME_IN_MILLIS = times[1] * 1000;
+            }
+            resetTimer();
+        });
+    }
+
+    private int[] getTimesOutOfMenuString(String menuString) {
+        int[] times = new int[2];
+        menuString = menuString.replace(" ", "");
+        String[] arr = menuString.split("\\+");
+        times[0] = Integer.parseInt(arr[0]);
+        times[1] = Integer.parseInt(arr[1]);
+        return times;
+    }
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -469,6 +523,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         outState.putInt("incrementTime", INCREMENT_TIME_IN_MILLIS);
         outState.putLong("startingTime", START_TIME_IN_MILLIS);
         outState.putShort("mTurnCnt", turnCnt);
+        outState.putStringArray("arrayString", arrayString);
     }
 
     @Override
@@ -483,6 +538,17 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         if (baseTime > 0){
             START_TIME_IN_MILLIS = baseTime;
             INCREMENT_TIME_IN_MILLIS = bonusTime;
+
+            //TODO: refractor into own method
+            String[] tmp_arrString = arrayString;
+            arrayString = new String[tmp_arrString.length + 1];
+
+            for (int i = 0; i < tmp_arrString.length; i++){
+                arrayString[i] = tmp_arrString[i];
+            }
+            String s = (baseTime/60/1000) + " + " + (bonusTime/1000);
+            arrayString[arrayString.length-1] = s;
+            initTimePicker(arrayString);
         }
         resetTimer();
     }
