@@ -12,9 +12,18 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="alertDialogTheme">@style/MyDialogTheme</item>
     </style>
     <style name="DefaultNumberPickerTheme">
         <item name="colorControlNormal">@color/transparent</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:fontFamily">@font/pixeboy</item>
+        <item name="android:textSize">20dp</item>
+
+    </style>
+
+    <style name="DefaultDialogNumberPickerTheme">
+        <!-- <item name="colorControlNormal">@color/transparent</item> -->
         <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:fontFamily">@font/pixeboy</item>
         <item name="android:textSize">20dp</item>
@@ -27,6 +36,10 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="MyDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">#039BE5</item>
+        <item name="fontFamily">@font/pixeboy</item>
+    </style>
 
     <color name="transparent">#00FFFFFF</color>
 </resources>
