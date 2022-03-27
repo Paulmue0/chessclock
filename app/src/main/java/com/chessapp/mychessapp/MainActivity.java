@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             player = false;
             turnCnt = 0;
             // Initialize Menu
-            arrayString = new String[]{"1 + 0","3 + 2","5 + 3","10 + 5","15 + 10", "custom time"};
+            arrayString = new String[]{"1 | 0","3 | 2","5 | 3","10 | 5","15 | 10", "custom time"};
         }
         initTimePicker(arrayString);
         updateCountDownText();
@@ -503,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
     private int[] getTimesOutOfMenuString(String menuString) {
         int[] times = new int[2];
         menuString = menuString.replace(" ", "");
-        String[] arr = menuString.split("\\+");
+        String[] arr = menuString.split("\\|");
         times[0] = Integer.parseInt(arr[0]);
         times[1] = Integer.parseInt(arr[1]);
         return times;
@@ -546,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             for (int i = 0; i < tmp_arrString.length; i++){
                 arrayString[i] = tmp_arrString[i];
             }
-            String s = (baseTime/60/1000) + " + " + (bonusTime/1000);
+            String s = (baseTime/60/1000) + " | " + (bonusTime/1000);
             arrayString[arrayString.length-1] = s;
             initTimePicker(arrayString);
         }
