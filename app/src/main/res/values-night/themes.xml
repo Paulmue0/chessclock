@@ -22,10 +22,11 @@
     </style>
 
     <style name="DefaultDialogNumberPickerTheme">
-        <!-- <item name="colorControlNormal">@color/transparent</item> -->
+        <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:fontFamily">@font/pixeboy</item>
         <item name="android:textSize">20dp</item>
+
 
     </style>
 </resources>

@@ -3,6 +3,7 @@ package com.chessapp.mychessapp;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,6 @@ public class PickTimeDialog extends AppCompatDialogFragment {
                         listener.applyTexts(base, bonus);
                     }
                 });
-
         initBaseTime();
         initBonusTime();
         baseSecondPicker = view.findViewById(R.id.baseSeconds);
@@ -73,8 +73,31 @@ public class PickTimeDialog extends AppCompatDialogFragment {
         bonusSecondPicker.setDisplayedValues(bonusSeconds);
         bonusSecondPicker.setValue(0);
 
+        //TODO: remove this
+        //setNumberPickerTheme();
+
         return builder.create();
     }
+
+    /**
+    private void setNumberPickerTheme() {
+        int currentNightMode = getContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                // Night mode is not active on device
+                baseSecondPicker.setBackgroundResource(R.drawable.drawablenp_small);
+                baseMinutePicker.setBackgroundResource(R.drawable.drawablenp_small);
+                bonusSecondPicker.setBackgroundResource(R.drawable.drawablenp_small);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                // Night mode is active on device
+                baseSecondPicker.setBackgroundResource(R.drawable.drawablenp_small_night);
+                baseMinutePicker.setBackgroundResource(R.drawable.drawablenp_small_night);
+                bonusSecondPicker.setBackgroundResource(R.drawable.drawablenp_small_night);
+                break;
+        }
+    }
+     */
 
     private void initBonusTime() {
         String[] tmp_bonusTime = new String[31];
