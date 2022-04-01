@@ -20,9 +20,9 @@ import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageButton;
 
 @Keep
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PickTimeDialog.PickTimeDialogListener{
     private long START_TIME_IN_MILLIS = 600000;
-    private short INCREMENT_TIME_IN_MILLIS = 0;
+    private int INCREMENT_TIME_IN_MILLIS = 0;
 
     private TextView mTextViewCountDownPlayer1;
     private TextView mTextViewCountDownPlayer2;
@@ -32,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private GifImageButton mButtonStartPausePlayer2;
     private ImageButton mButtonReset;
     private ImageButton mButtonPlayPause;
-    private NumberPicker mNumberPicker;
 
+    private NumberPicker mNumberPicker;
+    private String[] arrayString;
 
     private CountDownTimer mCountDownTimer;
 
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     //if True == Player 1
     //If False == Player 2
     private boolean player;
+    private int currentSelection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
+
+        mNumberPicker = findViewById(R.id.picker);
 
         mTextViewCountDownPlayer1 = findViewById(R.id.counttime_player1);
         mTextViewCountDownPlayer2 = findViewById(R.id.counttime_player2);
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 player = false;
                 startTimer();
                 //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
                 //mButtonStartPausePlayer2.setScaleType(null);
                 mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
                 turnCnt++;
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 startTimer();
                 player = false;
                 //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
                 //mButtonStartPausePlayer2.setScaleType(null);
                 mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
 
@@ -118,14 +122,14 @@ public class MainActivity extends AppCompatActivity {
                 //mButtonStartPausePlayer1.setScaleType(null);
                 mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                 //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.smoking_pelican);
             } else if (!player) {
                 startTimer();
                 player = true;
                 //mButtonStartPausePlayer1.setScaleType(null);
                 mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                 //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.smoking_pelican);
 
                 mTurnCounter1.setVisibility(View.VISIBLE);
                 mTurnCounter2.setVisibility(View.VISIBLE);
@@ -153,10 +157,12 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        //TODO: Refractor this
+        /*
         mButtonPlayPause.setOnClickListener(view -> playOrPauseGame());
 
         mNumberPicker = findViewById(R.id.picker);
-        String[] arrayString= new String[]{"1 + 0","3 | 2","5 | 3","10 | 5","15 | 10"};
+        String[] arrayString= new String[]{"1 + 0","3 + 2","5 + 3","10 + 5","15 + 10", "custom time"};
         mNumberPicker.setMinValue(0);
         mNumberPicker.setMaxValue(arrayString.length-1);
         mNumberPicker.setDisplayedValues(arrayString);
@@ -164,6 +170,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         mNumberPicker.setFormatter(value -> arrayString[value]);
+
+        mNumberPicker.setOnScrollListener((numberPicker, scrollState) -> {
+            if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
+                if(mNumberPicker.getValue() == 5)
+                    openPickTimeDialog();
+        });
+
         mNumberPicker.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
             if (newValue == 0){
                 START_TIME_IN_MILLIS = 60000;
@@ -187,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
             }
             resetTimer();
         });
+
+         */
         updateCountDownText();
 
         if(savedInstanceState != null){
@@ -199,7 +214,8 @@ public class MainActivity extends AppCompatActivity {
             mTimeLeftInMillis_Player1 = savedInstanceState.getLong("millisLeftPlayer1");
             mTimeLeftInMillis_Player2 = savedInstanceState.getLong("millisLeftPlayer2");
             turnCnt = savedInstanceState.getShort("mTurnCnt");
-            INCREMENT_TIME_IN_MILLIS = savedInstanceState.getShort("incrementTime");
+            arrayString = savedInstanceState.getStringArray("arrayString");
+            INCREMENT_TIME_IN_MILLIS = savedInstanceState.getInt("incrementTime");
             START_TIME_IN_MILLIS = savedInstanceState.getLong("startingTime");
             player = !player;
             updateCountDownText();
@@ -213,14 +229,13 @@ public class MainActivity extends AppCompatActivity {
                 if (player){
                     if (!mIsPaused) mTimeLeftInMillis_Player1 = mEndTimePlayer1 - System.currentTimeMillis();
                     mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg_aseprite);
-                    mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_thinking);
+                    mButtonStartPausePlayer2.setImageResource(R.drawable.smoking_pelican);
                 }
                 else{
                    if (!mIsPaused) mTimeLeftInMillis_Player2 = mEndTimePlayer2 - System.currentTimeMillis();
-                    mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_thinking);
+                    mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
                     mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg_aseprite);
                 }
-
 
                 updateCountDownText();
                 if (!mIsPaused){
@@ -232,24 +247,13 @@ public class MainActivity extends AppCompatActivity {
                     mButtonStartPausePlayer1.setClickable(false);
                     mButtonStartPausePlayer2.setClickable(false);
 
-                    if(player){
-                        try {
-                            ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+                    try {
+                        ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+                        ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
 
-                        }catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    else{
-                        try {
-                            ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
-
-                        }catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-
                 }
 
             }
@@ -270,9 +274,16 @@ public class MainActivity extends AppCompatActivity {
             // Set Starting Player
             player = false;
             turnCnt = 0;
+            // Initialize Menu
+            arrayString = new String[]{"custom time", "1 | 0","3 | 2","5 | 3","10 | 5","15 | 10"};
         }
-
+        initTimePicker(arrayString);
         updateCountDownText();
+    }
+
+    private void openPickTimeDialog() {
+        PickTimeDialog pickTimeDialog = new PickTimeDialog();
+        pickTimeDialog.show(getSupportFragmentManager(), "pick time dialog");
     }
 
     @SuppressLint("SetTextI18n")
@@ -361,14 +372,16 @@ public class MainActivity extends AppCompatActivity {
         mEndTimePlayer1 = 0;
         mEndTimePlayer2 = 0;
 
-        mTextViewCountDownPlayer1.setTextColor(Color.GRAY);
-        mTextViewCountDownPlayer2.setTextColor(Color.GRAY);
+        mTextViewCountDownPlayer1.setTextColor(Color.BLACK);
+        mTextViewCountDownPlayer2.setTextColor(Color.BLACK);
 
         isFinished = false;
         try {
             mCountDownTimer.cancel();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NullPointerException e) {
+            //TODO: better exception handling
+            //throw new NullPointerException("no countdown to be canceled");
+            System.err.println("no countdown to be canceled");
         }
         mTimerRunning = false;
         player = true;
@@ -433,21 +446,11 @@ public class MainActivity extends AppCompatActivity {
             mButtonStartPausePlayer2.setClickable(false);
             pauseTimer();
             mIsPaused = true;
-            if(player){
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            else{
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).stop();
+                ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).stop();
+            }catch (Exception e) {
+                e.printStackTrace();
             }
 
         } else {
@@ -456,26 +459,55 @@ public class MainActivity extends AppCompatActivity {
             mButtonStartPausePlayer2.setClickable(true);
             startTimer();
             mIsPaused = false;
-            if(player){
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).start();
+            try {
+                ((GifDrawable)mButtonStartPausePlayer1.getDrawable()).start();
+                ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).start();
 
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
+            }catch (Exception e) {
+                e.printStackTrace();
             }
-            else{
-                try {
-                    ((GifDrawable)mButtonStartPausePlayer2.getDrawable()).start();
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
         }
+    }
+
+    private void initTimePicker(String[] menuList){
+        mButtonPlayPause.setOnClickListener(view -> playOrPauseGame());
+
+        mNumberPicker.setDisplayedValues(menuList);
+        mNumberPicker.setMinValue(0);
+        mNumberPicker.setMaxValue(menuList.length-1);
+        if (mNumberPicker.getMaxValue() > 5)
+            mNumberPicker.setValue(mNumberPicker.getMaxValue());
+        else
+            mNumberPicker.setValue(3);
 
 
+        mNumberPicker.setFormatter(value -> menuList[value]);
+
+        mNumberPicker.setOnScrollListener((numberPicker, scrollState) -> {
+            if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
+                if(mNumberPicker.getValue() == 0)
+                    openPickTimeDialog();
+        });
+
+        mNumberPicker.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
+
+            // If Value is not pick custom Time
+            if (newValue != 0){
+                int[] times = getTimesOutOfMenuString(menuList[newValue]);
+                START_TIME_IN_MILLIS = times[0] * 60 * 1000;
+                INCREMENT_TIME_IN_MILLIS = times[1] * 1000;
+            }
+            resetTimer();
+        });
+    }
+
+    private int[] getTimesOutOfMenuString(String menuString) {
+        int[] times = new int[2];
+        menuString = menuString.replace(" ", "");
+        String[] arr = menuString.split("\\|");
+        times[0] = Integer.parseInt(arr[0]);
+        times[1] = Integer.parseInt(arr[1]);
+        return times;
     }
 
     @Override
@@ -489,13 +521,52 @@ public class MainActivity extends AppCompatActivity {
         outState.putBoolean("isPaused", mIsPaused);
         outState.putLong("endTimePlayer1", mEndTimePlayer1);
         outState.putLong("endTimePlayer2", mEndTimePlayer2);
-        outState.putShort("incrementTime", INCREMENT_TIME_IN_MILLIS);
+        outState.putInt("incrementTime", INCREMENT_TIME_IN_MILLIS);
         outState.putLong("startingTime", START_TIME_IN_MILLIS);
         outState.putShort("mTurnCnt", turnCnt);
+        outState.putStringArray("arrayString", arrayString);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void applyTexts(long baseTime, int bonusTime) {
+        //TODO: remove this line
+        System.out.println("\nbase: " + baseTime + "\nbonus: " + bonusTime);
+        if (baseTime > 0){
+            START_TIME_IN_MILLIS = baseTime;
+            INCREMENT_TIME_IN_MILLIS = bonusTime;
+
+
+            //TODO: refractor into own method
+            String[] tmp_arrString = arrayString;
+            arrayString = new String[tmp_arrString.length + 1];
+
+            for (int i = 0; i < tmp_arrString.length; i++){
+                arrayString[i] = tmp_arrString[i];
+            }
+            String s = (baseTime/60/1000) + " | " + (bonusTime/1000);
+            //TODO: sort menu
+            /*
+            currentSelection = findIndexInArrayString(s);
+            System.out.println(currentSelection);
+             */
+            arrayString[arrayString.length-1] = s;
+            initTimePicker(arrayString);
+        }
+        resetTimer();
+    }
+
+    private int findIndexInArrayString(String s) {
+        int ret =-1;
+        for (int i = 0; i < arrayString.length; i++){
+            if(arrayString[i].compareTo(s) == 0) break;
+            if(arrayString[i].compareTo(s) > 0) return i;
+        }
+        return ret;
+
     }
 }
