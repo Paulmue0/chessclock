@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
     //if True == Player 1
     //If False == Player 2
     private boolean player;
+    private int currentSelection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             player = false;
             turnCnt = 0;
             // Initialize Menu
-            arrayString = new String[]{"1 | 0","3 | 2","5 | 3","10 | 5","15 | 10", "custom time"};
+            arrayString = new String[]{"custom time", "1 | 0","3 | 2","5 | 3","10 | 5","15 | 10"};
         }
         initTimePicker(arrayString);
         updateCountDownText();
@@ -484,14 +485,14 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
         mNumberPicker.setOnScrollListener((numberPicker, scrollState) -> {
             if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
-                if(mNumberPicker.getValue() == 5)
+                if(mNumberPicker.getValue() == 0)
                     openPickTimeDialog();
         });
 
         mNumberPicker.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
 
             // If Value is not pick custom Time
-            if (newValue != 5){
+            if (newValue != 0){
                 int[] times = getTimesOutOfMenuString(menuList[newValue]);
                 START_TIME_IN_MILLIS = times[0] * 60 * 1000;
                 INCREMENT_TIME_IN_MILLIS = times[1] * 1000;
@@ -539,6 +540,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             START_TIME_IN_MILLIS = baseTime;
             INCREMENT_TIME_IN_MILLIS = bonusTime;
 
+
             //TODO: refractor into own method
             String[] tmp_arrString = arrayString;
             arrayString = new String[tmp_arrString.length + 1];
@@ -547,9 +549,24 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 arrayString[i] = tmp_arrString[i];
             }
             String s = (baseTime/60/1000) + " | " + (bonusTime/1000);
+            //TODO: sort menu
+            /*
+            currentSelection = findIndexInArrayString(s);
+            System.out.println(currentSelection);
+             */
             arrayString[arrayString.length-1] = s;
             initTimePicker(arrayString);
         }
         resetTimer();
+    }
+
+    private int findIndexInArrayString(String s) {
+        int ret =-1;
+        for (int i = 0; i < arrayString.length; i++){
+            if(arrayString[i].compareTo(s) == 0) break;
+            if(arrayString[i].compareTo(s) > 0) return i;
+        }
+        return ret;
+
     }
 }
