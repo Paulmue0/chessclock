@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
     private boolean mTimerRunning;
     private boolean mIsPaused;
     boolean isFinished;
+    private boolean hasStarted;
 
     private long mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
     private long mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
         mButtonPlayPause = findViewById(R.id.playPause);
         mButtonPlayPause.setVisibility(View.INVISIBLE);
+        hasStarted = false;
 
         mButtonStartPausePlayer1 = findViewById(R.id.startstop_player1);
         mButtonStartPausePlayer1.setOnClickListener(v -> {
@@ -109,6 +111,21 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 mButtonReset.setVisibility(View.VISIBLE);
                 mButtonPlayPause.setVisibility(View.VISIBLE);
                 mNumberPicker.setVisibility(View.INVISIBLE);
+            }else if (!hasStarted){
+                hasStarted = true;
+                startTimer();
+                player = false;
+                //mButtonStartPausePlayer1.setScaleType(null);
+                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
+                //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
+                mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
+
+                mTurnCounter1.setVisibility(View.VISIBLE);
+                mTurnCounter2.setVisibility(View.VISIBLE);
+                mButtonReset.setVisibility(View.VISIBLE);
+                mButtonPlayPause.setVisibility(View.VISIBLE);
+                mNumberPicker.setVisibility(View.INVISIBLE);
+                updateCounter();
             }
         });
 
@@ -207,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         if(savedInstanceState != null){
             player = savedInstanceState.getBoolean("player");
             isFinished = savedInstanceState.getBoolean("isFinished");
+            hasStarted = savedInstanceState.getBoolean("hasStarted");
             mTimerRunning = savedInstanceState.getBoolean("timerRunning");
             mIsPaused = savedInstanceState.getBoolean("isPaused");
             mEndTimePlayer1 = savedInstanceState.getLong("endTimePlayer1");
@@ -376,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         mTextViewCountDownPlayer2.setTextColor(Color.BLACK);
 
         isFinished = false;
+        hasStarted = false;
         try {
             mCountDownTimer.cancel();
         } catch (NullPointerException e) {
@@ -436,6 +455,9 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
             }
             mTextViewCountDownPlayer2.setText(timeLeftFormatted);
+            if (!hasStarted) {
+                mTextViewCountDownPlayer1.setText(timeLeftFormatted);
+            }
         }
     }
 
@@ -519,6 +541,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         outState.putBoolean("player", player);
         outState.putBoolean("isFinished", isFinished);
         outState.putBoolean("isPaused", mIsPaused);
+        outState.putBoolean("hasStarted", hasStarted);
         outState.putLong("endTimePlayer1", mEndTimePlayer1);
         outState.putLong("endTimePlayer2", mEndTimePlayer2);
         outState.putInt("incrementTime", INCREMENT_TIME_IN_MILLIS);
