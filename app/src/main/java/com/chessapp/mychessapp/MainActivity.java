@@ -412,14 +412,14 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
         //mButtonReset.setVisibility(View.INVISIBLE);
         mButtonStartPausePlayer1.setVisibility(View.VISIBLE);
-        mButtonStartPausePlayer2.setClickable(true);
+        mButtonStartPausePlayer1.setClickable(true);
         mButtonStartPausePlayer2.setVisibility(View.VISIBLE);
         mButtonStartPausePlayer2.setClickable(true);
 
         mButtonPlayPause.setClickable(true);
 
-        mButtonStartPausePlayer1.setImageResource(R.drawable.player1_loading_screen);
-        mButtonStartPausePlayer2.setImageResource(R.drawable.player2_loading_screen);
+        mButtonStartPausePlayer1.setImageResource(R.drawable.loading_screen_placeholder);
+        mButtonStartPausePlayer2.setImageResource(R.drawable.loading_screen_placeholder);
 
 
     }
