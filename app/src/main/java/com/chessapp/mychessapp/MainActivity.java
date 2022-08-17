@@ -577,9 +577,9 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 arrayString[i] = tmp_arrString[i];
             }
             String s;
-            if (baseTime < 100000)
+            if (baseTime < 10000)
                 s = "00:0" + (baseTime/1000) + " | " + (bonusTime/1000);
-            else if (baseTime < 600000)
+            else if (baseTime < 60000)
                 s = "00:" + (baseTime/1000) + " | " + (bonusTime/1000);
             else
                 s = (baseTime/60/1000) + " | " + (bonusTime/1000);
