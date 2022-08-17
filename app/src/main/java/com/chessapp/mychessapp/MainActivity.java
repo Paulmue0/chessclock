@@ -21,8 +21,8 @@ import pl.droidsonroids.gif.GifImageButton;
 
 @Keep
 public class MainActivity extends AppCompatActivity implements PickTimeDialog.PickTimeDialogListener{
-    private long START_TIME_IN_MILLIS = 600000;
-    private int INCREMENT_TIME_IN_MILLIS = 0;
+    private long START_TIME_IN_MILLIS = 300000;
+    private int INCREMENT_TIME_IN_MILLIS = 3000;
 
     private TextView mTextViewCountDownPlayer1;
     private TextView mTextViewCountDownPlayer2;
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             } else if (!player) {
                 startTimer();
                 player = true;
+                hasStarted = true;
                 //mButtonStartPausePlayer1.setScaleType(null);
                 mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                 //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
