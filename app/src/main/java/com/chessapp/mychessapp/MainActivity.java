@@ -40,8 +40,9 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
     private boolean mTimerRunning;
     private boolean mIsPaused;
-    boolean isFinished;
+    private boolean isFinished;
     private boolean hasStarted;
+    private boolean turnUpdate;
 
     private long mTimeLeftInMillis_Player1 = START_TIME_IN_MILLIS;
     private long mTimeLeftInMillis_Player2 = START_TIME_IN_MILLIS;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         mButtonPlayPause = findViewById(R.id.playPause);
         mButtonPlayPause.setVisibility(View.INVISIBLE);
         hasStarted = false;
+        turnUpdate = false;
 
         mButtonStartPausePlayer1 = findViewById(R.id.startstop_player1);
         mButtonStartPausePlayer1.setOnClickListener(v -> {
@@ -98,20 +100,8 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
                 //mButtonStartPausePlayer2.setScaleType(null);
                 mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
-                turnCnt++;
-                updateCounter();
-            } else if (player) {
-                startTimer();
-                player = false;
-                //mButtonStartPausePlayer1.setScaleType(ImageView.ScaleType.CENTER);
-                mButtonStartPausePlayer1.setImageResource(R.drawable.smoking_pelican);
-                //mButtonStartPausePlayer2.setScaleType(null);
-                mButtonStartPausePlayer2.setImageResource(R.drawable.pelikan_flieg);
-
-                mButtonReset.setVisibility(View.VISIBLE);
-                mButtonPlayPause.setVisibility(View.VISIBLE);
-                mNumberPicker.setVisibility(View.INVISIBLE);
-            }else if (!hasStarted){
+                incrementTurnCnt();
+            } else if (!hasStarted){
                 hasStarted = true;
                 startTimer();
                 player = false;
@@ -125,8 +115,8 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 mButtonReset.setVisibility(View.VISIBLE);
                 mButtonPlayPause.setVisibility(View.VISIBLE);
                 mNumberPicker.setVisibility(View.INVISIBLE);
-                updateCounter();
-            }
+
+            } updateCounter();
         });
 
         mButtonStartPausePlayer2 = findViewById(R.id.startstop_player2);
@@ -140,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 mButtonStartPausePlayer1.setImageResource(R.drawable.pelikan_flieg);
                 //mButtonStartPausePlayer2.setScaleType(ImageView.ScaleType.CENTER);
                 mButtonStartPausePlayer2.setImageResource(R.drawable.smoking_pelican);
+                incrementTurnCnt();
             } else if (!player) {
                 startTimer();
                 player = true;
@@ -154,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
                 mButtonReset.setVisibility(View.VISIBLE);
                 mButtonPlayPause.setVisibility(View.VISIBLE);
                 mNumberPicker.setVisibility(View.INVISIBLE);
-                updateCounter();
-            }
+
+            } updateCounter();
         });
 
         mButtonReset.setOnClickListener(v -> {
@@ -236,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             arrayString = savedInstanceState.getStringArray("arrayString");
             INCREMENT_TIME_IN_MILLIS = savedInstanceState.getInt("incrementTime");
             START_TIME_IN_MILLIS = savedInstanceState.getLong("startingTime");
+            turnUpdate = savedInstanceState.getBoolean("turnUpdate");
             player = !player;
             updateCountDownText();
             player = !player;
@@ -300,6 +292,13 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         updateCountDownText();
     }
 
+    private void incrementTurnCnt() {
+        if(turnUpdate) {
+            turnCnt++;
+        }
+        turnUpdate = !turnUpdate;
+    }
+
     private void openPickTimeDialog() {
         PickTimeDialog pickTimeDialog = new PickTimeDialog();
         pickTimeDialog.show(getSupportFragmentManager(), "pick time dialog");
@@ -341,6 +340,8 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
             @Override
             public void onFinish() {
+                setCurrentTimeLeft(0);
+                updateCountDownText();
                 mTimerRunning = false;
                 isFinished = true;
                 mButtonStartPausePlayer1.setClickable(false);
@@ -396,6 +397,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
         isFinished = false;
         hasStarted = false;
+        turnUpdate = false;
         try {
             mCountDownTimer.cancel();
         } catch (NullPointerException e) {
@@ -422,14 +424,13 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         mButtonStartPausePlayer1.setImageResource(R.drawable.loading_screen_placeholder);
         mButtonStartPausePlayer2.setImageResource(R.drawable.loading_screen_placeholder);
 
-
     }
 
     private void updateCountDownText() {
         if (player) {
             int minutes = (int) (mTimeLeftInMillis_Player1 / 1000) / 60;
             int seconds = (int) (mTimeLeftInMillis_Player1 / 1000) % 60;
-            int millis = (int) (((mTimeLeftInMillis_Player1) %1000)/100);
+            int millis = (int) (((mTimeLeftInMillis_Player1) %1000)/10);
 
             String timeLeftFormatted;
             if(minutes < 1){
@@ -516,20 +517,24 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
             // If Value is not pick custom Time
             if (newValue != 0){
-                int[] times = getTimesOutOfMenuString(menuList[newValue]);
-                START_TIME_IN_MILLIS = times[0] * 60 * 1000;
-                INCREMENT_TIME_IN_MILLIS = times[1] * 1000;
+                long[] times = getTimesOutOfMenuString(menuList[newValue]);
+                START_TIME_IN_MILLIS = times[0];
+                INCREMENT_TIME_IN_MILLIS = (int) times[1];
             }
             resetTimer();
         });
     }
 
-    private int[] getTimesOutOfMenuString(String menuString) {
-        int[] times = new int[2];
+    private long[] getTimesOutOfMenuString(String menuString) {
+        long[] times = new long[2];
         menuString = menuString.replace(" ", "");
+        menuString = menuString.replace(":", "");
         String[] arr = menuString.split("\\|");
-        times[0] = Integer.parseInt(arr[0]);
-        times[1] = Integer.parseInt(arr[1]);
+        if (menuString.startsWith("0"))
+            times[0] = Integer.parseInt(arr[0]) * 1000;
+        else
+            times[0] = Integer.parseInt(arr[0]) * 60 * 1000;
+        times[1] = Integer.parseInt(arr[1]) * 1000;
         return times;
     }
 
@@ -540,6 +545,7 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
         outState.putLong("millisLeftPlayer2", mTimeLeftInMillis_Player2);
         outState.putBoolean("timerRunning", mTimerRunning);
         outState.putBoolean("player", player);
+        outState.putBoolean("turnUpdate", turnUpdate);
         outState.putBoolean("isFinished", isFinished);
         outState.putBoolean("isPaused", mIsPaused);
         outState.putBoolean("hasStarted", hasStarted);
@@ -558,8 +564,6 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
 
     @Override
     public void applyTexts(long baseTime, int bonusTime) {
-        //TODO: remove this line
-        System.out.println("\nbase: " + baseTime + "\nbonus: " + bonusTime);
         if (baseTime > 0){
             START_TIME_IN_MILLIS = baseTime;
             INCREMENT_TIME_IN_MILLIS = bonusTime;
@@ -572,7 +576,13 @@ public class MainActivity extends AppCompatActivity implements PickTimeDialog.Pi
             for (int i = 0; i < tmp_arrString.length; i++){
                 arrayString[i] = tmp_arrString[i];
             }
-            String s = (baseTime/60/1000) + " | " + (bonusTime/1000);
+            String s;
+            if (baseTime < 100000)
+                s = "00:0" + (baseTime/1000) + " | " + (bonusTime/1000);
+            else if (baseTime < 600000)
+                s = "00:" + (baseTime/1000) + " | " + (bonusTime/1000);
+            else
+                s = (baseTime/60/1000) + " | " + (bonusTime/1000);
             //TODO: sort menu
             /*
             currentSelection = findIndexInArrayString(s);
